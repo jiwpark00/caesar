@@ -1,5 +1,6 @@
 import webapp2
 from caesar import encrypt
+import cgi
 
 page_header = """
 <!DOCTYPE html>
@@ -16,14 +17,17 @@ page_footer = """
 """
 
 class Index(webapp2.RequestHandler):
-    def post(self):
+    def get(self):
         edit_header = "<h1>Caesar</h1>"
-
         text_form = """
         <form action="/encrypted" method="post">
-            <textarea name="textarea" style="height:150px; width:400px" placeholder="Enter your text here"></textarea>
-            <br>
-            <input type="submit" value="Submit">
+        <textarea type="text" name="textarea" style="height:150px; width:400px" placeholder="Enter your text here"></textarea>
+        <br>
+        <label>
+        Number of positions to rotate?
+        </label>
+        <input type="text" name="rotateCount"></input>
+        <input type="submit" value="Submit">
         </form>
         """
         body_content = edit_header + text_form
@@ -34,15 +38,19 @@ class EncryptedView(webapp2.RequestHandler):
     def post(self):
         edit_header = "<h1>Caesar</h1>"
         textarea = self.request.get("textarea")
-        answer = encrypt(textarea,13)
+        rotateCount = self.request.get("rotateCount")
+        rotateCountInt = int(rotateCount)
+        answer = encrypt(textarea,rotateCountInt)
         encrypt_form = """
-        <form action="/" method="post">
-            <textarea name="encryptedarea" style="height:150px; width:400px" placeholder="Enter your text here"></textarea>
-            <br>
-            <input type="submit" value="Submit">
+        <form method="post">
+        <textarea name="encryptedarea" style="height:150px; width:400px">{0}</textarea>
+        <br>
+        </input>
+
         </form>
-        """
-        body_content = edit_header + answer + encrypt_form
+        """.format(answer)
+
+        body_content = edit_header +  encrypt_form
         response = page_header + body_content + page_footer
         self.response.write(response)
 
