@@ -16,7 +16,7 @@ page_footer = """
 """
 
 class Index(webapp2.RequestHandler):
-    def get(self):
+    def post(self):
         edit_header = "<h1>Caesar</h1>"
 
         text_form = """
@@ -35,7 +35,14 @@ class EncryptedView(webapp2.RequestHandler):
         edit_header = "<h1>Caesar</h1>"
         textarea = self.request.get("textarea")
         answer = encrypt(textarea,13)
-        body_content = edit_header + answer
+        encrypt_form = """
+        <form action="/" method="post">
+            <textarea name="encryptedarea" style="height:150px; width:400px" placeholder="Enter your text here"></textarea>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+        """
+        body_content = edit_header + answer + encrypt_form
         response = page_header + body_content + page_footer
         self.response.write(response)
 
