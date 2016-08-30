@@ -40,13 +40,12 @@ class EncryptedView(webapp2.RequestHandler):
         textarea = self.request.get("textarea")
         rotateCount = self.request.get("rotateCount")
         rotateCountInt = int(rotateCount)
-        answer = encrypt(textarea,rotateCountInt)
+        answer = encrypt(cgi.escape(textarea,quote=True),rotateCountInt)
         encrypt_form = """
         <form method="post">
         <textarea name="encryptedarea" style="height:150px; width:400px">{0}</textarea>
         <br>
         </input>
-
         </form>
         """.format(answer)
 
